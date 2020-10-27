@@ -15,6 +15,10 @@ Policies are encoded and stored in the notes attribute of an AD group. Any Mac t
 
 This effectively allows MacOS profiles to be stored directly within AD without having to extend the AD schema, and provides a mechanism to "scope" policies to specific users and workstations.
 
+Please note, this code was originally part of the LabWarden project.
+
+However, the ability to administratively install profiles from the command-line may be removed from future versions of MacOS making the LabNotes code legacy.
+
 
 ## Installation
 
@@ -235,8 +239,6 @@ Any user or workstation that is a member of the osx-wgp-gpo-Mac-UKLocale group, 
 3.2.0 - 24-Oct-2020
 
 * First public release.
-
-* The ability to administratively install profiles from the command-line may soon be removed from MacOS making this code redundant.
 
 * This code was lifted and removed from the LabWarden project, hence the version number. Note, the LabNotes code is disabled if a version of LabWarden prior to 3.2.0 is found to be installed.
 
