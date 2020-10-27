@@ -18,9 +18,9 @@ This effectively allows MacOS profiles to be stored directly within AD without h
 
 ## Installation
 
-[Download](https://github.com/execriez/LabNotes/archive/master.zip) the LabNotes zip archive, then unzip the archive on a Mac workstation.
+[Download](https://github.com/execriez/LabNotes/archive/main.zip) the LabNotes zip archive, then unzip the archive on a Mac workstation.
 
-Ideally, to install - you should double-click the [LabNotes.pkg](https://raw.githubusercontent.com/execriez/LabNotes/master/SupportFiles/LabNotes.pkg) installer package which can be found in the "SupportFiles" directory.
+Ideally, to install - you should double-click the [LabNotes.pkg](https://github.com/execriez/LabNotes/raw/main/SupportFiles/LabNotes.pkg) installer package which can be found in the "SupportFiles" directory.
 
 If the installer package isn't available, you can run the command-line installer which can be found in the project "bin" directory:
 
@@ -40,7 +40,7 @@ After installation, you should reboot.
 
 ## Uninstalling
 
-To uninstall you should double-click the [LabNotes-Uninstaller.pkg](https://raw.githubusercontent.com/execriez/LabNotes/master/SupportFiles/LabNotes-Uninstaller.pkg) uninstaller package which can be found in the "SupportFiles" directory.
+To uninstall you should double-click the [LabNotes-Uninstaller.pkg](https://github.com/execriez/LabNotes/raw/main/SupportFiles/LabNotes-Uninstaller.pkg) uninstaller package which can be found in the "SupportFiles" directory.
 
 
 	

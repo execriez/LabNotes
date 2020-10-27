@@ -107,6 +107,7 @@ else
   # -- Remove any unwanted files
   find "${GLB_SV_THISSCRIPTTEMPDIRPATH}/${GLB_SC_PROJECTNAME}" -iname .DS_Store -exec rm -f {} \;
   rm -fR "${GLB_SV_THISSCRIPTTEMPDIRPATH}/${GLB_SC_PROJECTNAME}/.git"
+  rm -fR "${GLB_SV_THISSCRIPTTEMPDIRPATH}/${GLB_SC_PROJECTNAME}/.gitattributes"  
   rm -fR "${GLB_SV_THISSCRIPTTEMPDIRPATH}/${GLB_SC_PROJECTNAME}/SupportFiles"
   find -d "${GLB_SV_THISSCRIPTTEMPDIRPATH}/${GLB_SC_PROJECTNAME}" -iregex ".*/[^/]*custom[^/]*/.*" -exec rm -fd {} \;
 

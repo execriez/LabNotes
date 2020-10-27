@@ -22,7 +22,7 @@ GLB_SV_PROJECTDIRPATH="$(dirname $(dirname ${0}))"
 
 # ---
 
-GLB_SV_CODEVERSION="3.0.2"
+GLB_SV_CODEVERSION="3.2.0"
 
 # ---
 
