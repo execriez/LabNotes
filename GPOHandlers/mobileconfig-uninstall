@@ -1,0 +1,96 @@
+#!/bin/bash
+#
+# Short:    Payload Handler Script - uninstall the mobileconfig (profile) with the specified profile identifier
+# Author:   Mark J Swift
+# Version:  3.2.0
+# Modified: 24-Oct-2020
+#
+# Called as follows:
+#   mobileconfig-uninstall <profileidentifier> [user]
+#
+# Without a user specified, uninstalls for the workstation.
+# With a user, uninstalls for the specified user.
+#
+# This routine is used by gpupdate when processing mobileconfig files stored in a groups AD "Notes" field
+
+# ---
+
+# Calculate SystemVersionStampAsNumber
+
+sv_SystemVersionStampAsString="$(sw_vers -productVersion)"
+iv_SystemVersionStampAsNumber=0
+for iv_Num in $(echo ${sv_SystemVersionStampAsString}".0.0.0.0" | cut -d"." -f1-4 | tr "." "\n")
+do
+  iv_SystemVersionStampAsNumber=$((${iv_SystemVersionStampAsNumber}*256+${iv_Num}))
+done
+
+# ---
+
+# get command line options
+
+sv_PayloadIdentifier="${1}"
+
+if test -z "${sv_PayloadIdentifier}"
+then
+  echo "Usage mobileconfig-uninstall <profileidentifier> [user]"
+  exit 0
+fi
+
+sv_GPOuser="${2}"
+
+if test -n "${sv_GPOuser}"
+then
+  # normal users can only handle their own configs.
+  if [ "$(whoami)" != "root" ]
+  then
+    sv_GPOuser=""
+  
+  else
+    if [ ${iv_SystemVersionStampAsNumber} -lt 168493056 ]
+    then
+      echo "Installing or uninstalling mobileconfigs for other users, is not supported prior to 10.11"
+      exit 99
+    fi
+  fi
+fi
+
+# ---
+
+# Uninstall the mobileconfig
+iv_Err=0
+
+if test -z "${sv_GPOuser}"
+then
+  sv_Err=$(/usr/bin/profiles 2>&1 -R -p "${sv_PayloadIdentifier}")
+  iv_Err=$?
+  
+else
+  sv_Err=$(/usr/bin/profiles 2>&1 -R -p "${sv_PayloadIdentifier}" -U "${sv_GPOuser}")
+  iv_Err=$?
+
+fi
+
+# ---
+
+# Fish the actual error number out from inside the error message
+if [ ${iv_Err} -ne 0 ]
+then
+  iv_ErrNo=$(echo "${sv_Err}" | grep -i " returned " | sed 's| returned ||' | tail -n1 | cut -d " " -f1)
+  if test -n "${iv_ErrNo}"
+  then
+    iv_Err=${iv_ErrNo}
+  fi
+fi
+
+# Special cases for errors that aren't errors
+case ${iv_Err} in
+-205)
+  # Mobileconfig isn't installed, so no need to uninstall
+  iv_Err=0
+  ;;
+ 
+esac
+
+# ---
+
+exit ${iv_Err}

@@ -1,0 +1,35 @@
+#!/bin/bash
+#
+# Short:    Payload Handler Script - set payload identifier for the specified mobileconfig (profile) file
+# Author:   Mark J Swift
+# Version:  3.2.0
+# Modified: 24-Oct-2020
+#
+# Called as follows:    
+#   mobileconfig-identifier <somefile.mobileconfig> <id>
+#
+# This routine is used by gpupdate when processing mobileconfig files stored in a groups AD "Notes" field
+
+# ---
+
+sv_PayloadFilePath="${1}"
+sv_PayloadIdentifier="${2}"
+
+if test -z "${sv_PayloadFilePath}"
+then
+  echo "Usage mobileconfig-setid <somefile.mobileconfig> <id>"
+  exit 0
+fi
+
+# ---
+
+if test -e "${sv_PayloadFilePath}"
+then
+  # Set the PayloadIdentifier to include a 'managed' string - so we know what we have installed
+  /usr/libexec/PlistBuddy -c "Set ':PayloadIdentifier' ${sv_PayloadIdentifier}" "${sv_PayloadFilePath}"
+fi
+
+# ---
+
+# Everything is OK
+exit 0
