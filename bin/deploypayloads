@@ -39,8 +39,7 @@ fi
 # ---
 
 # Used to distinguish mobileconfigs managed by LabWarden (Legacy)
-#sv_lwmanaged=".lwm"
-sv_lwmanaged="."
+sv_lwmanaged=".lwm"
 
 # Used to distinguish mobileconfigs managed by LabNotes
 sv_ManagedTag=".${GLB_SC_PROJECTNAME}"
