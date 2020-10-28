@@ -3,7 +3,7 @@
 # Short:    Utility Script - Deploy payloads from cached group policies
 # Author:   Mark J Swift
 # Version:  3.2.0
-# Modified: 24-Oct-2020
+# Modified: 28-Oct-2020
 #
 # Called as follows:
 #   gpupdate [-force|-quick] [<user>]
@@ -50,14 +50,6 @@ sv_ManagedTag=".${GLB_SC_PROJECTNAME}"
 
 # ---
 
-# Grab  lock
-if [ $(GLB_BF_NAMEDLOCKGRAB "${GLB_SV_THISSCRIPTFILENAME}") = ${GLB_BC_FALSE} ]
-then
-  GLB_NF_QUICKEXIT "'${GLB_SV_THISSCRIPTFILENAME}' aborted. Another instance is already running ."
-fi
-
-# ---
-
 if [ -e "/usr/local/LabWarden/util/gpupdate" ]
 then
   GLB_NF_QUICKEXIT "'${GLB_SV_THISSCRIPTFILENAME}' aborted. An old version of LabWarden is installed that includes incompatible code."
@@ -66,6 +58,14 @@ fi
 if [ -e "/usr/local/LabWarden/bin/gpupdate" ]
 then
   GLB_NF_QUICKEXIT "'${GLB_SV_THISSCRIPTFILENAME}' aborted. An old version of LabWarden is installed that includes incompatible code."
+fi
+
+# ---
+
+# Grab  lock
+if [ $(GLB_BF_NAMEDLOCKGRAB "${GLB_SV_THISSCRIPTFILENAME}") = ${GLB_BC_FALSE} ]
+then
+  GLB_NF_QUICKEXIT "'${GLB_SV_THISSCRIPTFILENAME}' aborted. Another instance is already running ."
 fi
 
 # ---

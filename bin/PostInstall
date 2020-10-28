@@ -63,15 +63,6 @@ GLB_NF_LOGMESSAGE ${GLB_IC_MSGLEVELINFO} "Performing post-install checks"
 
 if test -z "${sv_RootDirPath}"
 then
-  sv_ManagedPrefsFilePath="/Library/Managed Preferences/${GLB_SC_PROJECTSIGNATURE}.plist"
-  if [ ! -e "${sv_ManagedPrefsFilePath}" ]
-  then
-    GLB_NF_LOGMESSAGE ${GLB_IC_MSGLEVELNOTICE} "Creating empty '${sv_ManagedPrefsFilePath}'"
-    /usr/libexec/PlistBuddy >/dev/null 2>&1 -c "Save" "${sv_ManagedPrefsFilePath}"
-    chown root:wheel "${sv_ManagedPrefsFilePath}"
-    chmod 644 "${sv_ManagedPrefsFilePath}"
-  fi
-
   # Load LaunchDaemon plists
   while read sv_LaunchServiceFileName
   do
