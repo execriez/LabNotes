@@ -2,11 +2,11 @@
 #
 # Short:    Utility Script - Deploy payloads from cached group policies
 # Author:   Mark J Swift
-# Version:  3.2.0
-# Modified: 28-Oct-2020
+# Version:  3.2.1
+# Modified: 05-Nov-2020
 #
 # Called as follows:
-#   gpupdate [-force|-quick] [<user>]
+#   deploypayloads
 #
 
 # ---
@@ -16,7 +16,7 @@ GLB_SV_PROJECTDIRPATH="$(dirname $(dirname ${0}))"
 
 # ---
 
-GLB_SV_CODEVERSION="3.2.0"
+GLB_SV_CODEVERSION="3.2.1"
 
 # ---
 

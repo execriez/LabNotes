@@ -3,13 +3,15 @@
 <plist version="1.0">
 <dict>
 	<key>Label</key>
-	<string>com.github.execriez.labnotes.gpupdates</string>
+	<string>com.github.execriez.labnotes.gpupdate</string>
 	<key>ProgramArguments</key>
 	<array>
 		<string>/usr/local/LabNotes/bin/gpupdate</string>
 	</array>
+	<key>LimitLoadToSessionType</key>
+	<string>Aqua</string>
 	<key>StartInterval</key>
-	<integer>293</integer>
+	<integer>307</integer>
 	<key>RunAtLoad</key>
 	<true/>
 </dict>

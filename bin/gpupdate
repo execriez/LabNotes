@@ -2,11 +2,11 @@
 #
 # Short:    Utility Script - Perform a Group Policy update
 # Author:   Mark J Swift
-# Version:  3.2.0
-# Modified: 24-Oct-2020
+# Version:  3.2.1
+# Modified: 05-Nov-2020
 #
 # Called as follows:
-#   gpupdate [-force|-quick] [<user>]
+#   gpupdate [-force|-quick]
 #
 # Without a user specified, updates the group policies for the workstation.
 # With a user, updates the group policies for the specified user.
@@ -18,7 +18,7 @@ GLB_SV_PROJECTDIRPATH="$(dirname $(dirname ${0}))"
 
 # ---
 
-GLB_SV_CODEVERSION="3.2.0"
+GLB_SV_CODEVERSION="3.2.1"
 
 # ---
 
@@ -38,13 +38,6 @@ fi
 # By the time we get here, quite a few global variables have been set up.
 # Look at 'inc/Common.sh' for a complete list.
 
-# ---
-
-if [ "${GLB_SV_RUNUSERNAME}" != "root" ]
-then
-  GLB_NF_QUICKEXIT "Aborting - must be run as root"
-fi
-
 # --- check if we are getting our payloads from AD
 
 if [ -z "${GLB_SV_ADDNSDOMAINNAME}" ]
@@ -58,12 +51,10 @@ sv_GPoption="$(echo ${1} | tr [A-Z] [a-z])"
 
 case "${sv_GPoption}" in
 -force|-quick|-default)
-  sv_GPOuser=${2}
   ;;
 
 *)
   sv_GPoption="-default"
-  sv_GPOuser=${1}
   ;;
     
 esac
@@ -90,16 +81,6 @@ esac
     mkdir -p "${GLB_SC_PROJECTSETTINGSDIRPATH}/GPO/Cache/MemberOf/Users"
     mkdir -p "${GLB_SC_PROJECTSETTINGSDIRPATH}/GPO/Cache/Notes/Computers"
     mkdir -p "${GLB_SC_PROJECTSETTINGSDIRPATH}/GPO/Cache/Notes/Users"
-
-    # ---
-
-    # Set access rights
-    chmod 755 "${GLB_SC_PROJECTSETTINGSDIRPATH}"
-    chown root:wheel "${GLB_SC_PROJECTSETTINGSDIRPATH}"
-
-    # Set access rights
-    chown -R root:wheel "${GLB_SC_PROJECTSETTINGSDIRPATH}/GPO"
-    chmod -R 755 "${GLB_SC_PROJECTSETTINGSDIRPATH}/GPO"
     
     # ---
 
@@ -124,19 +105,6 @@ case "${sv_GPoption}" in
   ;;
     
 esac
-
-# ---
-
-  if test -z "${sv_GPOuser}"
-  then
-    # If we are root and we didn't supply a user, Update/apply user policies (as root) for all users who are logged in
-    who -q | grep -Ev "^#" | tr " " "\n" | sort -u | grep -Ev "^$" | grep -Ev "^root$" | while read sv_GPOuser
-    do
-      "${0}" "${sv_GPoption}" "${sv_GPOuser}"
-    done
-    
-    sv_GPOuser=""
-  fi
 
 # ---
 
@@ -292,25 +260,21 @@ then
   GLB_NF_QUICKEXIT "'${GLB_SV_THISSCRIPTFILENAME}' aborted. Another instance is already running ."
 fi
 
-if test -z "${sv_GPOuser}"
-then
-  GLB_NF_LOGMESSAGE ${GLB_IC_MSGLEVELINFO} "${GLB_SV_THISSCRIPTFILENAME} ${sv_GPoption}"
-  
-else
-  GLB_NF_LOGMESSAGE ${GLB_IC_MSGLEVELINFO} "${GLB_SV_THISSCRIPTFILENAME} ${sv_GPoption} '${sv_GPOuser}'"
-  
-fi
+GLB_NF_LOGMESSAGE ${GLB_IC_MSGLEVELINFO} "${GLB_SV_THISSCRIPTFILENAME} ${sv_GPoption}"
 
 # ---
 
-if test -n "${sv_GPOuser}"
-then
-  sv_ObjectContext="Users"
-  sv_ObjectName="${sv_GPOuser}"
 
-else
+
+
+if [ "${GLB_SV_RUNUSERNAME}" = "root" ]
+then
   sv_ObjectContext="Computers"
   sv_ObjectName="${GLB_SV_HOSTNAME}"
+
+else
+  sv_ObjectContext="Users"
+  sv_ObjectName="${GLB_SV_RUNUSERNAME}"
   
 fi
 
@@ -422,7 +386,14 @@ esac
           do
             cat "${sv_UpdatedInfoPayloadDirPath}/${sv_InfoPayloadName}" | base64 2>/dev/null -D | tar 2>/dev/null -xvzf -
           done
-          chown -R root:wheel "${sv_UpdatedPayloadContentDirPath}"
+
+          if [ "${GLB_SV_RUNUSERNAME}" = "root" ]
+          then
+            chown -R root:wheel "${sv_UpdatedPayloadContentDirPath}"
+          else
+            chown -R ${GLB_SV_RUNUSERNAME}:admin "${sv_UpdatedPayloadContentDirPath}"
+          fi
+          
           cd /tmp
           
           # ---
@@ -442,7 +413,7 @@ esac
 # rather than waiting for the deploypayloads LaunchAgent/LaunchDeamon to kick in
 if [ "${sv_GPoption}" = "-force" ]
 then
-  "${GLB_SV_THISSCRIPTDIRPATH}/deploypayloads" "${sv_GPOuser}"
+  "${GLB_SV_THISSCRIPTDIRPATH}/deploypayloads"
 fi
 
 # ---

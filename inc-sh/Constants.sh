@@ -2,8 +2,8 @@
 #
 # Short:    Constants (shell)
 # Author:   Mark J Swift
-# Version:  3.2.0
-# Modified: 24-Oct-2020
+# Version:  3.2.1
+# Modified: 05-Nov-2020
 #
 # Should be included into scripts as follows:
 #   . /usr/local/LabWarden/inc-sh/Constants.sh
@@ -82,7 +82,7 @@ then
 
   GLB_SC_PROJECTNAME="LabNotes"
   GLB_SC_PROJECTINITIALS="LN"
-  GLB_SC_PROJECTVERSION="3.2.0"
+  GLB_SC_PROJECTVERSION="3.2.1"
   GLB_SC_PROJECTMAJORVERSION="3"
   GLB_SC_PROJECTDEVELOPER="com.github.execriez"
   GLB_SC_PROJECTSIGNATURE="com.github.execriez.labnotes"

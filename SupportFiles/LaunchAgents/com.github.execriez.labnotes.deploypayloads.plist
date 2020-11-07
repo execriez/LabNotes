@@ -11,6 +11,6 @@
 	<key>LimitLoadToSessionType</key>
 	<string>Aqua</string>
 	<key>StartInterval</key>
-	<integer>181</integer>
+	<integer>179</integer>
 </dict>
 </plist>

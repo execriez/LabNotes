@@ -2,8 +2,8 @@
 #
 # Short:    Common routines (shell)
 # Author:   Mark J Swift
-# Version:  3.2.0
-# Modified: 24-Oct-2020
+# Version:  3.2.1
+# Modified: 05-Nov-2020
 #
 # This include defines some global variables and functions that are used in core scripts and utilities.
 # These variables and functions are not used the policy scripts, unless passed to the policy on the command line.
@@ -86,11 +86,8 @@ then
 
   # ---
   
-  # Location where the config/pref files are stored
-  GLB_SC_PROJECTSETTINGSDIRPATH="/Library/Preferences/SystemConfiguration/${GLB_SC_PROJECTSIGNATURE}/V${GLB_SC_PROJECTMAJORVERSION}"
-  
   # Location of the system defaults file
-  GLB_SV_SYSDEFAULTSCONFIGFILEPATH="${GLB_SC_PROJECTSETTINGSDIRPATH}/Config/Global/Sys-Defaults.plist"
+  GLB_SV_SYSDEFAULTSCONFIGFILEPATH="/Library/Preferences/${GLB_SC_PROJECTSIGNATURE}/V${GLB_SC_PROJECTMAJORVERSION}/Config/Global/Sys-Defaults.plist"
   
   # ---
 
@@ -109,6 +106,27 @@ then
 
   # By the time we get here, quite a few global variables have been set up.
   # Look at 'inc/Common.sh' for a complete list.
+
+  # ---
+
+  if [ "${GLB_SV_RUNUSERNAME}" = "root" ]
+  then
+
+    # Delete previous preferences
+    if [ -e "/Library/Preferences/SystemConfiguration/com.github.execriez.labnotes" ]
+    then
+      rm -fR "/Library/Preferences/SystemConfiguration/com.github.execriez.labnotes"
+    fi
+  
+    # Location where the computer config/pref files are stored
+    GLB_SC_PROJECTSETTINGSDIRPATH="/Library/Preferences/${GLB_SC_PROJECTSIGNATURE}/V${GLB_SC_PROJECTMAJORVERSION}"
+  
+  else
+
+    # Location where the user config/pref files are stored
+    GLB_SC_PROJECTSETTINGSDIRPATH=~/Library/Preferences/${GLB_SC_PROJECTSIGNATURE}/V${GLB_SC_PROJECTMAJORVERSION}
+ 
+  fi
 
   # -- Begin Function Definition --
 
@@ -294,7 +312,7 @@ then
     GLB_SV_LOCALPREFSDIRPATH="${GLB_SC_PROJECTSETTINGSDIRPATH}/Config/Computers/localhost"
   
   else
-    GLB_SV_LOCALPREFSDIRPATH="${GLB_SV_CONSOLEUSERHOMEDIRPATH}/Library/Preferences/${GLB_SC_PROJECTSIGNATURE}/V${GLB_SC_PROJECTMAJORVERSION}/${GLB_SV_HOSTNAME}"
+    GLB_SV_LOCALPREFSDIRPATH="${GLB_SC_PROJECTSETTINGSDIRPATH}/Config/Users/${GLB_SV_RUNUSERNAME}"
     
   fi
   

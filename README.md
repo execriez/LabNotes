@@ -190,10 +190,8 @@ Also, LabNotes only checks AD and updates policies at defined intervals. If you 
 	log into a Mac as a network user
 	
 	In a Terminal, type the following 
-	(replace LocalAdmin with the name of a local admin user) :
 	
-		su LocalAdmin
-		sudo /usr/local/LabNotes/bin/gpupdate -force
+		/usr/local/LabNotes/bin/gpupdate -force
 
 >Because you chose to apply the policy to a user or group of users - the mobileconfig will be pulled down as a "User Profile" and installed when an associated user logs in.
 >
@@ -235,6 +233,12 @@ Any user or workstation that is a member of the osx-wgp-gpo-Mac-UKLocale group, 
 
 
 ## History
+
+3.2.1 - 05-Nov-2020
+
+* Project preferences have been relocated to (~)/Library/preferences/com.github.execriez.labnotes . The old preferences folder will be deleted if found.
+
+* User gpos are now downloaded by running gpupdate as the user.
 
 3.2.0 - 24-Oct-2020
 
