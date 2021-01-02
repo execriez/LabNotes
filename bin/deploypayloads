@@ -2,8 +2,8 @@
 #
 # Short:    Utility Script - Deploy payloads from cached group policies
 # Author:   Mark J Swift
-# Version:  3.2.1
-# Modified: 05-Nov-2020
+# Version:  3.2.2
+# Modified: 02-Jan-2021
 #
 # Called as follows:
 #   deploypayloads
@@ -16,7 +16,7 @@ GLB_SV_PROJECTDIRPATH="$(dirname $(dirname ${0}))"
 
 # ---
 
-GLB_SV_CODEVERSION="3.2.1"
+GLB_SV_CODEVERSION="3.2.2"
 
 # ---
 
@@ -80,6 +80,14 @@ then
     sv_PolicyContext="Computers/localhost"
   fi
 
+  # make sure the managed prefs directory exists
+  if ! test -e "/Library/Managed Preferences"
+  then
+    GLB_NF_LOGMESSAGE ${GLB_IC_MSGLEVELNOTICE} "Creating folder '/Library/Managed Preferences'"
+    mkdir -p "/Library/Managed Preferences"
+    chmod 755 "/Library/Managed Preferences"
+  fi
+
 else
   sv_GPOuser=""
   sv_PolicyContext="Users/${GLB_SV_RUNUSERNAME}"
@@ -93,10 +101,12 @@ fi
 # Set the CWD to somewhere anyone can access
 cd /tmp
 
-
 if test -e "${GLB_SC_PROJECTSETTINGSDIRPATH}/GPO/Policies/${sv_PolicyContext}"
 then
 
+  if test -e "/Library/Managed Preferences"
+  then
+  
   iv_CruxEpoch=$(stat -f "%m" "/Library/Managed Preferences")
   iv_ObjectEpoch=$(stat -f "%m" "${GLB_SC_PROJECTSETTINGSDIRPATH}/GPO/Policies/${sv_PolicyContext}")
   if [ ${iv_CruxEpoch} -lt ${iv_ObjectEpoch} ]
@@ -259,6 +269,9 @@ then
     
     done
   fi
+  
+  fi
+  
 fi
 
 # ---

@@ -234,6 +234,10 @@ Any user or workstation that is a member of the osx-wgp-gpo-Mac-UKLocale group, 
 
 ## History
 
+3.2.2 - 02-Jan-2021
+
+* Fixed bug in /bin/deploypayloads that assumed "/Library/Managed Prefs" always exists. If a profile has never been installed, this directory doesn't exist.
+
 3.2.1 - 05-Nov-2020
 
 * Project preferences have been relocated to (~)/Library/preferences/com.github.execriez.labnotes . The old preferences folder will be deleted if found.
