@@ -2,8 +2,8 @@
 #
 # Short:    Payload Handler Script - install the specified mobileconfig (profile) file
 # Author:   Mark J Swift
-# Version:  3.2.0
-# Modified: 24-Oct-2020
+# Version:  3.2.3
+# Modified: 02-Jan-2021
 #
 # Called as follows:    
 #   mobileconfig-install <somefile.mobileconfig> [user]
@@ -23,6 +23,15 @@ for iv_Num in $(echo ${sv_SystemVersionStampAsString}".0.0.0.0" | cut -d"." -f1-
 do
   iv_SystemVersionStampAsNumber=$((${iv_SystemVersionStampAsNumber}*256+${iv_Num}))
 done
+
+# ---
+
+if [ ${iv_SystemVersionStampAsNumber} -ge 184549376 ]
+then
+  iv_Err=99
+  echo "Installing mobileconfigs administratively is not supported in MacOS 11 and later"
+  exit ${iv_Err}
+fi
 
 # ---
 
@@ -48,8 +57,9 @@ then
   else
     if [ ${iv_SystemVersionStampAsNumber} -lt 168493056 ]
     then
-      echo "Installing or uninstalling mobileconfigs for other users, is not supported prior to 10.11"
-      exit 99
+      iv_Err=99
+      echo "Installing mobileconfigs for other users is not supported prior to MacOS 10.11"
+      exit ${iv_Err}
     fi
   fi
 fi
@@ -67,13 +77,17 @@ if test -z "${sv_GPOuser}"
 then
   if test -n "$(profiles -L | grep "profileIdentifier:" | cut -d" " -f 4- | grep -E "^${sv_PayloadIdentifier}$")"
   then
-    exit 0
+    iv_Err=0
+    echo "No need to install, profile already installed"
+    exit ${iv_Err}
   fi  
   
 else
   if test -n "$(profiles -L -U ${sv_GPOuser} | grep "profileIdentifier:" | cut -d" " -f 4- | grep -E "^${sv_PayloadIdentifier}$")"
   then
-    exit 0
+    iv_Err=0
+    echo "No need to install, profile already installed"
+    exit ${iv_Err}
   fi  
 fi
 
@@ -115,6 +129,26 @@ then
   then
     iv_Err=${iv_ErrNo}
   fi
+  echo "${sv_Err}"
+  
+else
+  # Check if actually installed
+  if test -z "${sv_GPOuser}"
+  then
+    if test -z "$(profiles -L | grep "profileIdentifier:" | cut -d" " -f 4- | grep -E "^${sv_PayloadIdentifier}$")"
+    then
+      iv_Err=98
+      echo "Profile install failed"
+    fi  
+  
+  else
+    if test -z "$(profiles -L -U ${sv_GPOuser} | grep "profileIdentifier:" | cut -d" " -f 4- | grep -E "^${sv_PayloadIdentifier}$")"
+    then
+      iv_Err=98
+      echo "Profile install failed"
+    fi  
+  fi
+
 fi
 
 # ---
@@ -127,4 +161,4 @@ fi
 
 # ---
 
-exit ${iv_ErrCode}
+exit ${iv_Err}

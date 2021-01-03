@@ -17,7 +17,7 @@ This effectively allows MacOS profiles to be stored directly within AD without h
 
 Please note, this code was originally part of the LabWarden project.
 
-However, the ability to administratively install profiles from the command-line may be removed from future versions of MacOS making the LabNotes code legacy.
+However, the ability to administratively install profiles from the command-line has been removed in MacOS 11 and later, making the LabNotes mobileconfig install code legacy.
 
 
 ## Installation
@@ -233,6 +233,10 @@ Any user or workstation that is a member of the osx-wgp-gpo-Mac-UKLocale group, 
 
 
 ## History
+
+3.2.3 - 02-Jan-2021
+
+* Added check for MacOS 11 and later and improved error reporting in 'mobileconfig-install' and 'mobileconfig-uninstall'.
 
 3.2.2 - 02-Jan-2021
 

@@ -2,7 +2,7 @@
 #
 # Short:    Utility Script - Deploy payloads from cached group policies
 # Author:   Mark J Swift
-# Version:  3.2.2
+# Version:  3.2.3
 # Modified: 02-Jan-2021
 #
 # Called as follows:
@@ -16,7 +16,7 @@ GLB_SV_PROJECTDIRPATH="$(dirname $(dirname ${0}))"
 
 # ---
 
-GLB_SV_CODEVERSION="3.2.2"
+GLB_SV_CODEVERSION="3.2.3"
 
 # ---
 
@@ -220,7 +220,7 @@ then
           while [ ${iv_Count} -lt 3 ]
           do
             GLB_NF_LOGMESSAGE ${GLB_IC_MSGLEVELNOTICE} "Uninstalling '${sv_PayloadFileExt}' '${sv_PayloadIdentifier}'"
-            "${sv_UninstallHandlerFilePath}" "${sv_PayloadIdentifier}" "${sv_GPOuser}"
+            sv_Err=$("${sv_UninstallHandlerFilePath}" "${sv_PayloadIdentifier}" "${sv_GPOuser}")
             
             iv_Err=$?
             if [ "${iv_Err}" -eq 0 ]
@@ -228,7 +228,8 @@ then
               break
             fi
         
-            GLB_NF_LOGMESSAGE ${MSGLEVELERR} "Error '${iv_Err}' uninstalling '${sv_PayloadFileExt}' '${sv_PayloadIdentifier}'"
+            GLB_NF_LOGMESSAGE ${GLB_IC_MSGLEVELERR} "Code '${iv_Err}'; '${sv_Err}'"
+            GLB_NF_LOGMESSAGE ${GLB_IC_MSGLEVELERR} "Failed to uninstall '${sv_PayloadFileExt}' '${sv_PayloadIdentifier}'"
             iv_Count=$((${iv_Count}+1))
           done
         done
@@ -254,7 +255,7 @@ then
           while [ ${iv_Count} -lt 3 ]
           do
             GLB_NF_LOGMESSAGE ${GLB_IC_MSGLEVELNOTICE} "Installing '${sv_PayloadFileExt}' '${sv_PayloadIdentifier}'"
-            "${sv_InstallHandlerFilePath}" "${sv_PayloadFilePath}" "${sv_GPOuser}"
+            sv_Err=$("${sv_InstallHandlerFilePath}" "${sv_PayloadFilePath}" "${sv_GPOuser}")
             
             iv_Err=$?
             if [ "${iv_Err}" -eq 0 ]
@@ -262,7 +263,8 @@ then
               break
             fi
         
-            GLB_NF_LOGMESSAGE ${MSGLEVELERR} "Error '${iv_Err}' installing '${sv_PayloadFileExt}' '${sv_PayloadIdentifier}'"
+            GLB_NF_LOGMESSAGE ${GLB_IC_MSGLEVELERR} "Code '${iv_Err}'; '${sv_Err}'"
+            GLB_NF_LOGMESSAGE ${GLB_IC_MSGLEVELERR} "Failed to install '${sv_PayloadFileExt}' '${sv_PayloadIdentifier}'"
             iv_Count=$((${iv_Count}+1))
           done
         done
